@@ -52,5 +52,14 @@ func (this handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this handler) GetHandler(w http.ResponseWriter, r *http.Request) {
+	short := r.PathValue("short")
+	resp, err := this.service.FindUrl(short)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(errs.InvalidShortURL().Error()))
 
+		return
+	}
+
+	http.Redirect(w, r, resp.LongUrl, http.StatusFound)
 }

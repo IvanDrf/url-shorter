@@ -68,7 +68,12 @@ func InvalidMediaType() error {
 	return Error{Code: http.StatusUnsupportedMediaType, Msg: "invalid media type, wants json"}
 }
 
-// erro of invalid json in request - cant unmarshal in models.Request
+// error of invalid json in request - cant unmarshal in models.Request
 func InvalidJSON() error {
 	return Error{Code: http.StatusBadRequest, Msg: "invalid storage of json in request"}
+}
+
+// error of invalid short link
+func InvalidShortURL() error {
+	return Error{Code: http.StatusNotFound, Msg: "can't find url in database"}
 }

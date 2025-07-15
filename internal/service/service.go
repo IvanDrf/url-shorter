@@ -12,7 +12,7 @@ import (
 
 type Service interface {
 	AddUrl(req *models.Requset) (models.Response, error)
-	FindUrl(req *models.Requset) (models.Response, error)
+	FindUrl(short string) (models.Response, error)
 }
 
 type service struct {
@@ -41,8 +41,8 @@ func (this service) AddUrl(req *models.Requset) (models.Response, error) {
 	return resp, nil
 }
 
-func (this service) FindUrl(req *models.Requset) (models.Response, error) {
-	resp, err := this.repo.FindShortUrl(req.LongUrl)
+func (this service) FindUrl(short string) (models.Response, error) {
+	resp, err := this.repo.FindLongUrl(short)
 	if err != nil {
 		return models.Response{}, errs.InvalidSQL("can't find new url")
 	}

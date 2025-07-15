@@ -10,7 +10,7 @@ import (
 type Repo interface {
 	AddUrl(req *models.Response) error
 
-	FindShortUrl(long string) (models.Response, error)
+	FindLongUrl(short string) (models.Response, error)
 }
 
 type repo struct {
@@ -27,10 +27,11 @@ func (this repo) AddUrl(req *models.Response) error {
 	return err
 }
 
-func (this repo) FindShortUrl(long string) (models.Response, error) {
-	res, _ := this.db.Query(fmt.Sprintf("SELECT short_url FROM %s.%s WHERE long_url = '%s'", this.dbName, this.dbName, long))
+func (this repo) FindLongUrl(short string) (models.Response, error) {
+	res := this.db.QueryRow(fmt.Sprintf("SELECT long_url FROM %s.%s WHERE short_url = '%s';", this.dbName, this.dbName, short))
 	resp := models.Response{}
 
-	err := res.Scan(&resp.ShortUrl, &resp.LongUrl)
+	err := res.Scan(&resp.LongUrl)
+
 	return resp, err
 }
