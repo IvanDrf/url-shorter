@@ -1,6 +1,7 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"log/slog"
@@ -15,10 +16,10 @@ type Server struct {
 	handlers handlers.Handler
 }
 
-func NewServer(logger *slog.Logger) Server {
+func NewServer(cfg *config.Config, db *sql.DB, logger *slog.Logger) Server {
 	return Server{
 		server:   http.NewServeMux(),
-		handlers: handlers.NewHandler(logger),
+		handlers: handlers.NewHandler(cfg, db, logger),
 	}
 }
 
@@ -30,5 +31,5 @@ func (this *Server) Start(cfg *config.Config) {
 
 func (this *Server) RegisterRoutes() {
 	this.server.HandleFunc("POST /urls", this.handlers.PostHandler)
-	this.server.HandleFunc("GET /urls", this.handlers.GetHandler)
+	this.server.HandleFunc("GET /{short}", this.handlers.GetHandler)
 }

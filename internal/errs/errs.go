@@ -2,6 +2,7 @@ package errs
 
 import (
 	"fmt"
+	"net/http"
 )
 
 const (
@@ -22,6 +23,10 @@ type Error struct {
 
 func (this Error) Error() string {
 	return fmt.Sprintf("code: %v, err: %s", this.Code, this.Msg)
+}
+
+func (this Error) Byte() []byte {
+	return []byte(this.Error())
 }
 
 // error of env file
@@ -56,4 +61,14 @@ func InvalidSQL(msg string) error {
 // error of invalid source url
 func InvalidURL() error {
 	return Error{Code: errInvalidURL, Msg: "invalid source url"}
+}
+
+// error of invalid media type in request
+func InvalidMediaType() error {
+	return Error{Code: http.StatusUnsupportedMediaType, Msg: "invalid media type, wants json"}
+}
+
+// erro of invalid json in request - cant unmarshal in models.Request
+func InvalidJSON() error {
+	return Error{Code: http.StatusBadRequest, Msg: "invalid storage of json in request"}
 }

@@ -10,12 +10,12 @@ import (
 func main() {
 	cfg := config.InitCFG()
 
-	logger := logger.InitLogger(cfg)
-	server := server.NewServer(logger)
-	server.RegisterRoutes()
-
 	db := database.InitDB(cfg)
 	defer db.Close()
 
+	logger := logger.InitLogger(cfg)
+
+	server := server.NewServer(cfg, db, logger)
+	server.RegisterRoutes()
 	server.Start(cfg)
 }
