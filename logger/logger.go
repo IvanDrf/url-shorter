@@ -30,7 +30,7 @@ func InitLogger(cfg *config.Config) *slog.Logger {
 		level = slog.LevelError
 
 	default:
-		log.Fatal("cant set logger level")
+		log.Fatal()
 	}
 
 	return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{

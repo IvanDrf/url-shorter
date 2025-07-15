@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"url-shorter/internal/errs"
 
 	"github.com/joho/godotenv"
 )
@@ -15,7 +16,6 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBPort     string
-	DBsslmode  string
 
 	LoggerLevel string
 }
@@ -23,7 +23,7 @@ type Config struct {
 func InitCFG() *Config {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("can't read env file")
+		log.Fatal(errs.InvalidEnv())
 	}
 
 	return &Config{
@@ -34,7 +34,6 @@ func InitCFG() *Config {
 		DBPassword: os.Getenv("DB_PASSWORD"),
 		DBName:     os.Getenv("DB_NAME"),
 		DBPort:     os.Getenv("DB_PORT"),
-		DBsslmode:  os.Getenv("DB_MODE"),
 
 		LoggerLevel: os.Getenv("LOGGER_LEVEL"),
 	}
