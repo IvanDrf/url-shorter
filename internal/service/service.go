@@ -33,11 +33,7 @@ func (this service) AddUrl(req *models.Requset) (models.Response, error) {
 		LongUrl:  req.LongUrl,
 	}
 
-	err := this.repo.AddUrl(&resp)
-	if err != nil {
-		return models.Response{}, errs.InvalidSQL("can't add new url")
-	}
-
+	this.repo.AddUrl(&resp)
 	return resp, nil
 }
 
