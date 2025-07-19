@@ -45,9 +45,9 @@
 
 ## Shortener function
   ```golang
-  const shortLength = 7
+const shortLength = 7
 
-func ShortenUrl(src string) string {
+func (this shorten) ShortenUrl(src string) string {
 	hash := md5.Sum([]byte(src))
 	hexHash := hex.EncodeToString(hash[:])
 

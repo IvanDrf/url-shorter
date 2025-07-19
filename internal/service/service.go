@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/url"
 	"url-shorter/config"
+	"url-shorter/internal/checker"
 	"url-shorter/internal/errs"
 	"url-shorter/internal/models"
 	"url-shorter/internal/repo"
@@ -16,25 +17,33 @@ type Service interface {
 }
 
 type service struct {
-	repo repo.Repo
+	repo    repo.Repo
+	shorten shorter.Shorter
 }
 
 func NewService(db *sql.DB, cfg *config.Config) Service {
-	return service{repo: repo.NewRepo(db, cfg)}
+	return service{
+		repo:    repo.NewRepo(db, cfg),
+		shorten: shorter.NewShorten(),
+	}
 }
 
 func (this service) AddUrl(req *models.Requset) (models.Response, error) {
+	if !checker.ExistUrl(req.LongUrl) {
+		return models.Response{}, errs.InvalidURL()
+	}
+
 	if _, err := url.ParseRequestURI(req.LongUrl); err != nil {
 		return models.Response{}, errs.InvalidURL()
 	}
 
 	resp := models.Response{
-		ShortUrl: shorter.ShortenUrl(req.LongUrl),
+		ShortUrl: this.shorten.ShortenUrl(req.LongUrl),
 		LongUrl:  req.LongUrl,
 	}
 
-	this.repo.AddUrl(&resp)
-	return resp, nil
+	err := this.repo.AddUrl(&resp)
+	return resp, err
 }
 
 func (this service) FindUrl(short string) (models.Response, error) {
