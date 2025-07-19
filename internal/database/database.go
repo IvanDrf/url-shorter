@@ -18,5 +18,10 @@ func InitDB(cfg *config.Config) *sql.DB {
 		log.Fatal(errs.InvalidDBConnection())
 	}
 
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(errs.InvalidDBConnection())
+	}
+
 	return db
 }

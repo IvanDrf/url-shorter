@@ -16,9 +16,12 @@ const (
 
 func InitLogger(cfg *config.Config) *slog.Logger {
 	var level slog.Leveler
+	source := false
+
 	switch cfg.LoggerLevel {
 	case levelDebug:
 		level = slog.LevelDebug
+		source = true
 
 	case levelInfo:
 		level = slog.LevelInfo
@@ -34,7 +37,7 @@ func InitLogger(cfg *config.Config) *slog.Logger {
 	}
 
 	return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: source,
 		Level:     level,
 	}))
 }
