@@ -51,7 +51,7 @@ func (this handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(errs.InvalidSQL("cant add new url"))
 
 		if errors.Is(err, errs.InvalidURL()) {
 			this.logger.Warn("invalid url")

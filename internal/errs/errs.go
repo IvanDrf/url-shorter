@@ -39,6 +39,7 @@ func InvalidLevel() error {
 	return Error{Code: errConfig, Msg: "can't set logger level"}
 }
 
+// error of starting server
 func InvalidStart() error {
 	return Error{Code: errStartServer, Msg: "can't start server"}
 }
