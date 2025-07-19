@@ -40,6 +40,13 @@
   <a href="https://www.youtube.com/watch?v=DdI598gKkKw&amp;list=RDDdI598gKkKw&amp;start_radio=1">Found</a>.
   ```
 
+## Database
+| short_url | long_url                                                                     |
+|-----------|------------------------------------------------------------------------------|
+| bcf62df   | https://github.com/IvanDrf/url-shorter/main                                  |
+| c72b1d8   | https://www.youtube.com/watch?v=DdI598gKkKw&list=RDDdI598gKkKw&start_radio=1 |
+ 
+
 ## Used technologies
 - Golang 
 - MySql
