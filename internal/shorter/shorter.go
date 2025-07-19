@@ -5,9 +5,20 @@ import (
 	"encoding/hex"
 )
 
+type Shorter interface {
+	ShortenUrl(src string) string
+}
+
+type shorten struct {
+}
+
+func NewShorten() Shorter {
+	return shorten{}
+}
+
 const shortLength = 7
 
-func ShortenUrl(src string) string {
+func (this shorten) ShortenUrl(src string) string {
 	hash := md5.Sum([]byte(src))
 	hexHash := hex.EncodeToString(hash[:])
 

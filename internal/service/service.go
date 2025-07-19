@@ -16,11 +16,15 @@ type Service interface {
 }
 
 type service struct {
-	repo repo.Repo
+	repo    repo.Repo
+	shorten shorter.Shorter
 }
 
 func NewService(db *sql.DB, cfg *config.Config) Service {
-	return service{repo: repo.NewRepo(db, cfg)}
+	return service{
+		repo:    repo.NewRepo(db, cfg),
+		shorten: shorter.NewShorten(),
+	}
 }
 
 func (this service) AddUrl(req *models.Requset) (models.Response, error) {
@@ -29,7 +33,7 @@ func (this service) AddUrl(req *models.Requset) (models.Response, error) {
 	}
 
 	resp := models.Response{
-		ShortUrl: shorter.ShortenUrl(req.LongUrl),
+		ShortUrl: this.shorten.ShortenUrl(req.LongUrl),
 		LongUrl:  req.LongUrl,
 	}
 
