@@ -1,5 +1,5 @@
 # URL-shorter
-
+> This is a link shortener written in golang, using the standard net/http package and mySQL
 ## How it works
 - POST
   ```bash
