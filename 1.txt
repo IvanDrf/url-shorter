@@ -1,0 +1,41 @@
+# URL-shorter - Link shortener that converts long links into short links
+
+## Methods
+- POST
+  ```shell
+  curl -X POST http://localhost:8080/urls -H "Content-Type: application/json" -d '{"src":"_link_"}'
+  ```
+
+  - Request
+    ```json
+    {
+    "src": "https://github.com"
+    }
+    ```
+
+  - Response
+    ```json
+    {
+    "src": "http://github.com",
+    "res": "a3ca172"
+    }
+    ```
+    
+- GET
+  ```shell
+  curl -X GET http://localhost:8080/_short_link_
+  ```
+
+  - Request
+    ```shell
+    curl -X GET http://localhost:8080/a3ca172
+    ```
+
+  - Response
+    ```html
+    <a href="http://github.com">Found</a>.
+    ```
+
+
+
+    
