@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 	"url-shorter/config"
@@ -29,7 +30,8 @@ func (this handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	this.logger.Info("POST req")
 	if r.Header.Get("Content-Type") != "application/json" {
 		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write([]byte(errs.InvalidMediaType().Error()))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(errs.InvalidMediaType())
 
 		this.logger.Error("invalid content type")
 		return
@@ -38,7 +40,8 @@ func (this handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	req := models.Requset{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write([]byte(errs.InvalidJSON().Error()))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(errs.InvalidJSON())
 
 		this.logger.Error("invalid json")
 		return
@@ -47,14 +50,20 @@ func (this handler) PostHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := this.service.AddUrl(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err.Error())
 
-		this.logger.Warn("url already in db")
+		if errors.Is(err, errs.InvalidURL()) {
+			this.logger.Warn("invalid url")
+		} else {
+			this.logger.Warn("cant add new url")
+		}
+
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 
 	this.logger.Info("POST success")
@@ -67,7 +76,8 @@ func (this handler) GetHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := this.service.FindUrl(short)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(errs.InvalidShortURL().Error()))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(errs.InvalidShortURL())
 
 		this.logger.Warn("url is not in db")
 		return
